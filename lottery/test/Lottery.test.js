@@ -14,14 +14,14 @@ beforeEach(async () => {
   // Get a list of all accounts
   accounts = await web3.eth.getAccounts();
   // Use one of those accounts to deploy the contract
-  inbox = await new web3.eth.Contract(JSON.parse(interface))
+  lottery = await new web3.eth.Contract(JSON.parse(interface))
     .deploy({ data: bytecode})
     .send({ from: accounts[0], gas: '1000000' });
   // inbox.setProvider(provider);
 });
 
 describe('Lottery Contract', () => {
-  it('', async () => {
-
+  it('deploys a contract', async () => {
+    assert.ok(lottery.options.address);
   });
 });
