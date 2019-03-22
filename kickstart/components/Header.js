@@ -11,6 +11,7 @@
 
 import React, { Component } from "react";
 import { Input, Menu } from "semantic-ui-react";
+import { Link } from "../routes";
 
 export default class MenuExampleSecondary extends Component {
   state = { activeItem: "home" };
@@ -22,35 +23,17 @@ export default class MenuExampleSecondary extends Component {
 
     return (
       <Menu style={{ marginTop: "10px" }}>
-        <Menu.Item
-          name="CrowdCoin"
-          active={activeItem === "home"}
-          onClick={this.handleItemClick}
-        />
-        <Menu.Item
-          name="messages"
-          active={activeItem === "messages"}
-          onClick={this.handleItemClick}
-        />
-        <Menu.Item
-          name="friends"
-          active={activeItem === "friends"}
-          onClick={this.handleItemClick}
-        />
+        <Link route="/">
+          <a className="item">CrowdCoin</a>
+        </Link>
+
         <Menu.Menu position="right">
-          <Menu.Item>
-            <Input icon="search" placeholder="Search..." />
-          </Menu.Item>
-          <Menu.Item
-            name="Campaign"
-            active={activeItem === "logout"}
-            onClick={this.handleItemClick}
-          />
-          <Menu.Item
-            icon="add"
-            active={activeItem === "logout"}
-            onClick={this.handleItemClick}
-          />
+          <Link route="/">
+            <a className="item">Campaigns</a>
+          </Link>
+          <Link route="/campaigns/new">
+            <a className="item">+</a>
+          </Link>
         </Menu.Menu>
       </Menu>
     );
