@@ -1,15 +1,41 @@
 import React, { Component } from "react";
 import Layout from "../../../components/Layout";
 import { Link } from "../../../routes";
-import { Button } from "semantic-ui-react";
-import campaign from "../../../ethereum/campaign";
+import { Button, Table } from "semantic-ui-react";
+import Campaign from "../../../ethereum/campaign";
+import RequestRow from "../../../components/RequestRow";
 
 class RequestIndex extends Component {
   static async getInitialProps(props) {
     const { address } = props.query;
-    return { address, requestsLength };
+    const campaign = Campaign(address);
+    const requestsCount = await campaign.methods.getRequestCount().call();
+
+    const requests = await Promise.all(
+      Array(parseInt(requestsCount))
+        .fill()
+        .map((element, index) => {
+          return campaign.methods.requests(index).call();
+        })
+    );
+
+    return { address, requests, requestsCount };
   }
+
+  renderRows() {
+    return this.props.requests.map((request, index) => {
+      return (
+        <RequestRow
+          key={index}
+          request={request}
+          address={this.props.address}
+        />
+      );
+    });
+  }
+
   render() {
+    const { Header, Row, HeaderCell, Body } = Table;
     return (
       <Layout>
         <h3>Requests Index</h3>
@@ -19,6 +45,20 @@ class RequestIndex extends Component {
             <Button primary>Add request</Button>
           </a>
         </Link>
+        <Table>
+          <Header>
+            <Row>
+              <HeaderCell>ID</HeaderCell>
+              <HeaderCell>Description</HeaderCell>
+              <HeaderCell>Amount</HeaderCell>
+              <HeaderCell>Recipient</HeaderCell>
+              <HeaderCell>Approval Count</HeaderCell>
+              <HeaderCell>Approve</HeaderCell>
+              <HeaderCell>Finalize</HeaderCell>
+            </Row>
+          </Header>
+          <Body>{this.renderRows()}</Body>
+        </Table>
       </Layout>
     );
   }
